@@ -1,0 +1,71 @@
+server:
+  port: 9090
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/zuul-demo
+    username: postgres
+    password: postgres
+    hikari:
+      driver-class-name: org.postgresql.Driver
+      connection-timeout: 30000
+      maximum-pool-size: 500
+      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1;
+      validation-timeout: 28000
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: true
+    generate-ddl: false
+    open-in-view: false
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+  flyway:
+    enabled: true
+  application:
+    name: zuul-demo
+zuul:
+  routes:
+    items:
+      service-id: items-service
+      path: /items/**
+      url: http://localhost:8181/v1/items/
+      retryable: true
+    orders:
+      service-id: orders-service
+      path: /orders/**
+      url: http://localhost:8181/v1/orders/
+      retryable: true
+  ratelimit:
+    enabled: true
+    #repository: jpa
+    #repository: bucket4j_hazelcast
+    repository: redis
+    behind-proxy: true
+    add-response-headers: true
+    default-policy-list: #optional - will apply unless specific policy exists
+      - limit: 3000 #optional - request number limit per refresh interval window
+        quota: 1000 #optional - request time limit per refresh interval window (in seconds)
+        refresh-interval: 1 #default value (in seconds)
+        type: #optional
+          - user
+          - origin
+          - url
+          - httpmethod
+    policy-list:
+      items:
+        - limit: 3000
+          refresh-interval: 1
+          type:
+            - origin
+      orders:
+        - limit: 3000
+          refresh-interval: 1
+          type:
+            - origin

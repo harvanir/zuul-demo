@@ -1,0 +1,62 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'org.harvanir.cloud'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compile.exclude module: 'undertow-websockets-jsr'
+    compile.exclude module: 'spring-boot-starter-tomcat'
+    compile.exclude group: 'org.apache.tomcat'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "Greenwich.SR3")
+    set('cacheApiVersion', "1.0.0")
+    set('bucket4jVersion', "4.4.1")
+    set('rateLimitVersion', "2.2.4.RELEASE")
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'org.flywaydb:flyway-core'
+
+    //// rate limit - start
+    implementation "com.marcosbarbero.cloud:spring-cloud-zuul-ratelimit:${rateLimitVersion}"
+
+    // rate limit using jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // rate limit using redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // rate limit using hazelcast - start
+    implementation 'com.hazelcast:hazelcast'
+    implementation 'com.hazelcast:hazelcast-spring'
+    implementation "javax.cache:cache-api:${cacheApiVersion}"
+    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:${bucket4jVersion}"
+    implementation "com.github.vladimir-bukhtoyarov:bucket4j-jcache:${bucket4jVersion}"
+    implementation "com.github.vladimir-bukhtoyarov:bucket4j-hazelcast:${bucket4jVersion}"
+    // rate limit using hazelcast - end
+
+    //// rate limit - end
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
