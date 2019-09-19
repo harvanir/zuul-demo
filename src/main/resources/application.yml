@@ -1,5 +1,8 @@
 server:
   port: 9090
+  undertow:
+    worker-threads: 200
+    io-threads: 8
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/zuul-demo
@@ -25,9 +28,7 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
         format_sql: true
-    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
-  flyway:
-    enabled: true
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
   application:
     name: zuul-demo
 zuul:
@@ -42,6 +43,14 @@ zuul:
       path: /orders/**
       url: http://localhost:8181/v1/orders/
       retryable: true
+    go:
+      service-id: go-service
+      path: /go/**
+      url: http://localhost:7373/go/
+      retryable: true
+  host:
+    max-per-route-connections: 200
+    max-total-connections: 600 # route-count x max-per-route-connections
   ratelimit:
     enabled: true
     #repository: jpa
@@ -49,15 +58,15 @@ zuul:
     repository: redis
     behind-proxy: true
     add-response-headers: true
-    default-policy-list: #optional - will apply unless specific policy exists
-      - limit: 3000 #optional - request number limit per refresh interval window
-        quota: 1000 #optional - request time limit per refresh interval window (in seconds)
-        refresh-interval: 1 #default value (in seconds)
-        type: #optional
-          - user
-          - origin
-          - url
-          - httpmethod
+    #default-policy-list: #optional - will apply unless specific policy exists
+    #  - limit: 3000 #optional - request number limit per refresh interval window
+    #    quota: 1000 #optional - request time limit per refresh interval window (in seconds)
+    #    refresh-interval: 1 #default value (in seconds)
+    #    type: #optional
+    #      - user
+    #      - origin
+    #      - url
+    #      - httpmethod
     policy-list:
       items:
         - limit: 3000
@@ -69,3 +78,10 @@ zuul:
           refresh-interval: 1
           type:
             - origin
+      go:
+        - limit: 3000
+          refresh-interval: 1
+          type:
+            - origin
+flyway:
+  enabled: true
