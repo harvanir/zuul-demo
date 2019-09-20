@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.harvanir.cloud'
-version = '0.0.1-SNAPSHOT'
+version = '2.0.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -16,12 +16,13 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 ext {
     set('springCloudVersion', "Greenwich.SR3")
     set('cacheApiVersion', "1.0.0")
-    set('bucket4jVersion', "4.4.1")
+    set('bucket4jVersion', "4.5.0")
     set('rateLimitVersion', "2.2.4.RELEASE")
 }
 
@@ -43,9 +44,7 @@ dependencies {
     implementation 'com.hazelcast:hazelcast'
     implementation 'com.hazelcast:hazelcast-spring'
     implementation "javax.cache:cache-api:${cacheApiVersion}"
-    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:${bucket4jVersion}"
-    implementation "com.github.vladimir-bukhtoyarov:bucket4j-jcache:${bucket4jVersion}"
-    implementation "com.github.vladimir-bukhtoyarov:bucket4j-hazelcast:${bucket4jVersion}"
+    implementation "com.github.vladimir-bukhtoyarov.bucket4j:bucket4j-hazelcast:${bucket4jVersion}"
     // rate limit using hazelcast - end
 
     //// rate limit - end

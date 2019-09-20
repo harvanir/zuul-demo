@@ -18,9 +18,9 @@ Copy these jars to hazelcast server user library:
 ```shell script
 command-prompt$ hazelcast-{version}/user-lib
 ```
-* bucket4j-core-4.4.1.jar
-* bucket4j-hazelcast-4.4.1.jar
-* bucket4j-jcache-4.4.1.jar
+* bucket4j-core-4.5.0.jar
+* bucket4j-hazelcast-4.5.0.jar
+* bucket4j-jcache-4.5.0.jar
 * cache-api-1.0.0.jar
 
 ### Gradle command
@@ -33,5 +33,11 @@ command-prompt$ hazelcast-{version}/user-lib
 ./gradlew build
 ```
 
+### Run Go service
+```shell script
+./binary/hello-go-mac-os
+```
+
 ### Reference
 * https://github.com/marcosbarbero/spring-cloud-zuul-ratelimit
+* https://bintray.com/vladimir-bukhtoyarov/maven/bucket4j-parent/view/files/com/github/vladimir-bukhtoyarov/#files/com/github/vladimir-bukhtoyarov/
